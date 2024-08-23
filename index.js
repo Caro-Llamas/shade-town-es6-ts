@@ -1,83 +1,35 @@
+import { Lenses } from "./lenses.mjs";
+import { Model } from "./model.mjs";
+import { Frames } from "./frames.mjs";
+import { Sunglasses } from "./sunglasses.mjs"
+//To do: create a sunglasses class with default values 
+
 let sunglassesOptions = {
     models: [
-        {
-            name: "aviator",
-            price: 300,
-            thumbImg: "thumb-aviator.png",
-            cssClass: "frame-aviator",
-        },
-        {      
-            name: "half-frame",
-            price: 200,
-            thumbImg: "thumb-half-frame.png",
-            cssClass: "frame-half",
-        },
-        {
-            name: "round",  
-            price: 250,
-            thumbImg: "thumb-round.png",
-            cssClass: "frame-round",
-        },
-        {  
-            name: "wayfarer",
-            price: 250,
-            thumbImg: "thumb-wayfarer.png",
-            cssClass: "frame-wayfarer",
-        }],
+        new Model("aviator", 300, "thumb-aviator.png", "frame-aviator"),
+        new Model("half-frame", 200, "thumb-half-frame.png", "frame-half"),
+        new Model("round", 250, "thumb-round.png", "frame-round"),
+        new Model("wayfarer", 250, "thumb-wayfarer.png", "frame-wayfarer")
+    ],
     lenses: [
-        {
-            color: "sepia",
-            price: 20,
-            cssClass: "color-sepia",
-        },
-        {
-            color: "rainbow",
-            price: 50,
-            cssClass: "color-rainbow",
-        },
-        {
-            color: "iridescent",
-            price: 30,
-            cssClass: "color-iridescent",
-        }],
+        new Lenses("sepia", 20, "color-sepia"),
+        new Lenses("rainbow", 50, "color-rainbow"),
+        new Lenses("iridescent", 30, "color-iridescent")
+    ],
     frames: [
-        {
-            color: "charcoal",
-            price: 0,
-            cssClass: "color-charcoal",
-        },
-        {
-            color: "tan",
-            price: 0,
-            cssClass: "color-tan",
-        },
-        {
-            color: "rose",
-            price: 0,
-            cssClass: "color-rose",
-        },
+        new Frames("charcoal", 0, "color-charcoal"),
+        new Frames("tan", 0, "color-tan"),
+        new Frames("rose", 0, "color-rose")
+    
     ],
 }
 
-let sunglasses = {
-    model: {
-        name: "aviator",
-        price: 300,
-        thumbImg: "./images/thumb-aviator.png",
-        cssClass: "frame-aviator",
-    },
-    lenses: {
-        color: "sepia",
-        price: 20,
-        cssClass: "color-sepia",
-    },
-    frame: {
-        color: "charcoal",
-        price: 0,
-        cssClass: "color-charcoal",
-    }     
-}
 
+let sunglasses = new Sunglasses(
+            new Model ("aviator", 300, "./images/thumb-aviator.png", "frame-aviator"), 
+            new Lenses("sepia", 20, "color-sepia"), 
+            new Frames("charcoal", 0, "color-charcoal")
+        )
 
 
 let productDetailsEl = document.getElementById("productDetails")
@@ -87,9 +39,7 @@ let productLenses = document.getElementsByClassName("product-image_lenses")[0]
 
 let sunglassesNew = '' 
 
-function setSunglasses(sunglassesNew = sunglasses) {
-    return sunglassesNew
-}
+const setSunglasses = (sunglassesNew = sunglasses) => { return sunglassesNew }
 
 function render(sunglassesNew) {
     
@@ -132,17 +82,17 @@ function render(sunglassesNew) {
 
 //Highlight current selection
 function addHighlight(clickedItem) {
-    if (clickedItem.classList.contains("product-thumb")) {
-        Array.from(document.getElementsByClassName("product-thumb"))
-            .forEach(function(thumb) {
-               thumb.classList.remove("selected") 
-            }) 
-    } else if (clickedItem.classList.contains("product-color-swatch")) {
-        let siblings = clickedItem.closest("ul").querySelectorAll("button")
-        Array.from(siblings)
-            .forEach(function(swatch) {
-               swatch.classList.remove("selected") 
-            })
+
+    if (Array.from(clickedItem.classList).includes("product-thumb")) {
+        let thumbs = document.getElementsByClassName("product-thumb")
+        for(let thumb of thumbs){
+            thumb.classList.remove("selected")
+        }
+    } else if (Array.from(clickedItem.classList).includes("product-color-swatch")) {
+        let swatches = clickedItem.closest("ul").querySelectorAll("button")
+        for(let swatch of swatches){
+            swatch.classList.remove("selected")
+        }
     }
     clickedItem.classList.add("selected") 
 }
@@ -157,14 +107,11 @@ document.body.addEventListener("click", function(event) {
     }
     
     // update model
-    if (clickedItem.classList.contains("product-thumb")) {
+    if (Array.from(clickedItem.classList).includes("product-thumb")) {
 
         let currName = clickedItem.dataset.name
 
-        let modelOptions = sunglassesOptions.models
-        .filter(function(item) {
-            return item.name === currName
-        })[0]
+        let modelOptions = sunglassesOptions.models.filter(returnItem = (item) => item.name === currName)[0]
         
         let name = modelOptions.name
         let price = modelOptions.price
@@ -196,16 +143,13 @@ document.body.addEventListener("click", function(event) {
     }
     
     // update colors for frames / lenses
-    if (clickedItem.classList.contains("product-color-swatch")) {
+    if (Array.from(clickedItem.classList).includes("product-color-swatch")) {
         let currColor = clickedItem.dataset.color
         
         // check nearest parent div
             //lenses
         if (clickedItem.closest("div").classList[0] === "product-lenses") {
-            let colorOptions = sunglassesOptions.lenses
-            .filter(function(item) {
-                return item.color === currColor
-            })[0]
+            let colorOptions = sunglassesOptions.lenses.filter(returnColor = (item) => item.color === currColor)[0]
             
             let color = colorOptions.color
             let price = colorOptions.price
@@ -234,9 +178,7 @@ document.body.addEventListener("click", function(event) {
         //frames
         else {
             let colorOptions = sunglassesOptions.frames
-            .filter(function(item) {
-                return item.color === currColor
-            })[0]
+            .filter(returnColor = (item) => item.color === currColor)[0]
             
             let color = colorOptions.color
             let price = colorOptions.price
