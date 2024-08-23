@@ -17,7 +17,7 @@ export class Lenses {
 
 }
 
-export class Frames {
+export class Frame {
     constructor(color = "", price = 0, cssClass = "") {
         this.color = color;
         this.price = price;
@@ -26,9 +26,9 @@ export class Frames {
 }
 
 export class Sunglasses {
-    contructor(model = new Model(), lenses = new Lenses(), frames = new Frames()){
+    constructor(model = new Model(), lenses = new Lenses(), frame = new Frame()){
         this.model = new Model(model.name, model.price, model.thumbImg, model.cssClass);
         this.lenses = new Lenses(lenses.color, lenses.price, lenses.cssClass);
-        this.frames = new Frames(frames.color, frames.price, frames.cssClass);
+        this.frame = new Frame(frame.color, frame.price, frame.cssClass);
     }
 }
