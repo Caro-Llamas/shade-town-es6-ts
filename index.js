@@ -1,48 +1,141 @@
-import { Lenses } from "./lenses.mjs";
-import { Model } from "./model.mjs";
-import { Frames } from "./frames.mjs";
-import { Sunglasses } from "./sunglasses.mjs"
+//import { Model, Lenses, Frames, Sunglasses } from "./sunglasses.js"
 //To do: create a sunglasses class with default values 
+
+//  class Model {
+//     constructor(name = "", price = 0, thumbImg = "", cssClass = "") {
+//         this.name = name;
+//         this.price = price;
+//         this.thumbImg = thumbImg;
+//         this.cssClass = cssClass;
+//     }
+// }
+
+//  class Lenses {
+//     constructor(color = "", price = 0, cssClass = "") {
+//         this.color = color;
+//         this.price = price;
+//         this.cssClass = cssClass;
+//     }
+
+// }
+
+//  class Frames {
+//     constructor(color = "", price = 0, cssClass = "") {
+//         this.color = color;
+//         this.price = price;
+//         this.cssClass = cssClass;
+//     }
+// }
+
+//  class Sunglasses {
+//     contructor(model = new Model(), lenses = new Lenses(), frames = new Frames()){
+//         this.model = new Model(model.name, model.price, model.thumbImg, model.cssClass);
+//         this.lenses = new Lenses(lenses.color, lenses.price, lenses.cssClass);
+//         this.frames = new Frames(frames.color, frames.price, frames.cssClass);
+//     }
+// }
 
 let sunglassesOptions = {
     models: [
-        new Model("aviator", 300, "thumb-aviator.png", "frame-aviator"),
-        new Model("half-frame", 200, "thumb-half-frame.png", "frame-half"),
-        new Model("round", 250, "thumb-round.png", "frame-round"),
-        new Model("wayfarer", 250, "thumb-wayfarer.png", "frame-wayfarer")
-    ],
+        {
+            name: "aviator",
+            price: 300,
+            thumbImg: "thumb-aviator.png",
+            cssClass: "frame-aviator",
+        },
+        {      
+            name: "half-frame",
+            price: 200,
+            thumbImg: "thumb-half-frame.png",
+            cssClass: "frame-half",
+        },
+        {
+            name: "round",  
+            price: 250,
+            thumbImg: "thumb-round.png",
+            cssClass: "frame-round",
+        },
+        {  
+            name: "wayfarer",
+            price: 250,
+            thumbImg: "thumb-wayfarer.png",
+            cssClass: "frame-wayfarer",
+        }],
     lenses: [
-        new Lenses("sepia", 20, "color-sepia"),
-        new Lenses("rainbow", 50, "color-rainbow"),
-        new Lenses("iridescent", 30, "color-iridescent")
-    ],
+        {
+            color: "sepia",
+            price: 20,
+            cssClass: "color-sepia",
+        },
+        {
+            color: "rainbow",
+            price: 50,
+            cssClass: "color-rainbow",
+        },
+        {
+            color: "iridescent",
+            price: 30,
+            cssClass: "color-iridescent",
+        }],
     frames: [
-        new Frames("charcoal", 0, "color-charcoal"),
-        new Frames("tan", 0, "color-tan"),
-        new Frames("rose", 0, "color-rose")
-    
+        {
+            color: "charcoal",
+            price: 0,
+            cssClass: "color-charcoal",
+        },
+        {
+            color: "tan",
+            price: 0,
+            cssClass: "color-tan",
+        },
+        {
+            color: "rose",
+            price: 0,
+            cssClass: "color-rose",
+        },
     ],
 }
 
+// let sunglasses = new Sunglasses(
+//     new Model("aviator", 300, "./images/thumb-aviator.png", "frame-aviator"), 
+//     new Lenses("sepia", 20, "color-sepia"), 
+//     new Frames("charcoal", 0, "color-charcoal")
+// )
 
-let sunglasses = new Sunglasses(
-            new Model ("aviator", 300, "./images/thumb-aviator.png", "frame-aviator"), 
-            new Lenses("sepia", 20, "color-sepia"), 
-            new Frames("charcoal", 0, "color-charcoal")
-        )
 
+let sunglasses = {
+    model: {
+        name: "aviator",
+        price: 300,
+        thumbImg: "./images/thumb-aviator.png",
+        cssClass: "frame-aviator",
+    },
+    lenses: {
+        color: "sepia",
+        price: 20,
+        cssClass: "color-sepia",
+    },
+    frame: {
+        color: "charcoal",
+        price: 0,
+        cssClass: "color-charcoal",
+    }     
+}
 
+console.log(sunglasses)
 let productDetailsEl = document.getElementById("productDetails")
 let productImage = document.getElementById("productImage")
 let productFrames = document.getElementsByClassName("product-image_frame")[0]
 let productLenses = document.getElementsByClassName("product-image_lenses")[0]
 
-let sunglassesNew = '' 
+let sunglassesNew = ""
 
-const setSunglasses = (sunglassesNew = sunglasses) => { return sunglassesNew }
+const setSunglasses = (sunglassesNew = sunglasses) =>  sunglassesNew 
 
 function render(sunglassesNew) {
     
+    console.log(sunglassesNew)
+    console.log(sunglasses)
     sunglassesNew = {
         model: {
             name: sunglassesNew.model.name,
@@ -61,6 +154,7 @@ function render(sunglassesNew) {
             cssClass: sunglassesNew.frame.cssClass,
         }     
     }
+    console.log(sunglassesNew)
     
     let price = `$ ${sunglassesNew.model.price + sunglassesNew.lenses.price + sunglassesNew.frame.price}`
     
@@ -111,7 +205,7 @@ document.body.addEventListener("click", function(event) {
 
         let currName = clickedItem.dataset.name
 
-        let modelOptions = sunglassesOptions.models.filter(returnItem = (item) => item.name === currName)[0]
+        let modelOptions = sunglassesOptions.models.filter((item) => item.name === currName)[0]
         
         let name = modelOptions.name
         let price = modelOptions.price
@@ -149,7 +243,7 @@ document.body.addEventListener("click", function(event) {
         // check nearest parent div
             //lenses
         if (clickedItem.closest("div").classList[0] === "product-lenses") {
-            let colorOptions = sunglassesOptions.lenses.filter(returnColor = (item) => item.color === currColor)[0]
+            let colorOptions = sunglassesOptions.lenses.filter((item) => item.color === currColor)[0]
             
             let color = colorOptions.color
             let price = colorOptions.price
@@ -178,7 +272,7 @@ document.body.addEventListener("click", function(event) {
         //frames
         else {
             let colorOptions = sunglassesOptions.frames
-            .filter(returnColor = (item) => item.color === currColor)[0]
+            .filter((item) => item.color === currColor)[0]
             
             let color = colorOptions.color
             let price = colorOptions.price
