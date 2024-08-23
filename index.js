@@ -3,63 +3,21 @@ import { Model, Lenses, Frame, Sunglasses } from "./sunglasses.js"
 
 let sunglassesOptions = {
     models: [
-        {
-            name: "aviator",
-            price: 300,
-            thumbImg: "thumb-aviator.png",
-            cssClass: "frame-aviator",
-        },
-        {      
-            name: "half-frame",
-            price: 200,
-            thumbImg: "thumb-half-frame.png",
-            cssClass: "frame-half",
-        },
-        {
-            name: "round",  
-            price: 250,
-            thumbImg: "thumb-round.png",
-            cssClass: "frame-round",
-        },
-        {  
-            name: "wayfarer",
-            price: 250,
-            thumbImg: "thumb-wayfarer.png",
-            cssClass: "frame-wayfarer",
-        }],
-    lenses: [
-        {
-            color: "sepia",
-            price: 20,
-            cssClass: "color-sepia",
-        },
-        {
-            color: "rainbow",
-            price: 50,
-            cssClass: "color-rainbow",
-        },
-        {
-            color: "iridescent",
-            price: 30,
-            cssClass: "color-iridescent",
-        }],
-    frames: [
-        {
-            color: "charcoal",
-            price: 0,
-            cssClass: "color-charcoal",
-        },
-        {
-            color: "tan",
-            price: 0,
-            cssClass: "color-tan",
-        },
-        {
-            color: "rose",
-            price: 0,
-            cssClass: "color-rose",
-        },
+        new Model("aviator", 300, "thumb-aviator.png", "frame-aviator"),
+        new Model("half-frame", 200, "thumb-half-frame.png", "frame-half"),
+        new Model("round", 250, "thumb-round.png", "frame-round"),
+        new Model("wayfarer", 250, "thumb-wayfarer.png", "frame-wayfarer")
     ],
+    lenses: [
+        new Lenses("sepia", 20, "color-sepia"),
+        new Lenses("rainbow", 50, "color-rainbow"),
+        new Lenses("iridescent", 30, "color-iridescent")
+    ],
+    frames: [
+        new Frame("charcoal", 0, "color-charcoal"),
+        new Frame("tan", 0, "color-tan"),
+        new Frame("rose", 0, "color-rose")
+    ]
 }
 
 let sunglasses = new Sunglasses(
@@ -68,39 +26,17 @@ let sunglasses = new Sunglasses(
     new Frame("charcoal", 0, "color-charcoal")
 )
 
-
-
-// let sunglasses = {
-//     model: {
-//         name: "aviator",
-//         price: 300,
-//         thumbImg: "./images/thumb-aviator.png",
-//         cssClass: "frame-aviator",
-//     },
-//     lenses: {
-//         color: "sepia",
-//         price: 20,
-//         cssClass: "color-sepia",
-//     },
-//     frame: {
-//         color: "charcoal",
-//         price: 0,
-//         cssClass: "color-charcoal",
-//     }     
-// }
-
-console.log(sunglasses)
 let productDetailsEl = document.getElementById("productDetails")
 let productImage = document.getElementById("productImage")
 let productFrames = document.getElementsByClassName("product-image_frame")[0]
 let productLenses = document.getElementsByClassName("product-image_lenses")[0]
 
-let sunglassesNew = ""
+let sunglassesNew = sunglasses
 
 const setSunglasses = (sunglassesNew = sunglasses) =>  sunglassesNew 
 
 function render(sunglassesNew) {
-    console.log(sunglassesNew)
+    console.log(sunglassesOptions)
 
     let {model, lenses, frame} = sunglassesNew
     sunglassesNew = {
@@ -162,6 +98,7 @@ function addHighlight(clickedItem) {
 document.body.addEventListener("click", function(event) {
     let clickedItem = event.target
     let {model, lenses, frame} = sunglassesNew
+    console.log(sunglassesNew)
     //if sunglassesNew defined take variable from updates 
         //else use original sunglasses object
     if (!sunglassesNew) {
