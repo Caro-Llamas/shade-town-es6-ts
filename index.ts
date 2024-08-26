@@ -1,4 +1,4 @@
-import { Model, Lenses, Frame, Sunglasses } from "./sunglasses.js"
+import { Model, Lenses, Frame, Sunglasses } from "./sunglasses.ts"
 //To do: create a sunglasses class with default values 
 
 let sunglassesOptions = {
@@ -26,16 +26,16 @@ let sunglasses = new Sunglasses(
     new Frame("charcoal", 0, "color-charcoal")
 )
 
-let productDetailsEl = document.getElementById("productDetails")
-let productImage = document.getElementById("productImage")
-let productFrames = document.getElementsByClassName("product-image_frame")[0]
-let productLenses = document.getElementsByClassName("product-image_lenses")[0]
+let productDetailsEl: HTMLElement | null = document.getElementById("productDetails")
+let productImage: HTMLElement | null = document.getElementById("productImage")
+let productFrames: HTMLElement | null = document.getElementsByClassName("product-image_frame")[0] as HTMLElement
+let productLenses: HTMLElement | null = document.getElementsByClassName("product-image_lenses")[0] as HTMLElement
 
-let sunglassesNew = sunglasses
+let sunglassesNew: Sunglasses = sunglasses
 
 const setSunglasses = (sunglassesNew = sunglasses) =>  sunglassesNew 
 
-function render(sunglassesNew) {
+function render(sunglassesNew: Sunglasses) {
     console.log(sunglassesOptions)
 
     let {model, lenses, frame} = sunglassesNew
@@ -59,26 +59,54 @@ function render(sunglassesNew) {
     }
    
     
-    let price = `$ ${model.price + lenses.price + frame.price}`
+    let price: string = `$ ${model.price + lenses.price + frame.price}`
     
-    productDetailsEl.innerHTML = 
-    `<h1> ${model.name} </h1>
-     <p>Custom: ${lenses.color} lenses, ${frame.color} frames</p>
-     <p>${price} </p>`
+    if(productDetailsEl === null) {
+        console.error("Element with id: productDetails not found")
+    }else{
+        productDetailsEl.innerHTML = 
+        `<h1> ${model.name} </h1>
+        <p>Custom: ${lenses.color} lenses, ${frame.color} frames</p>
+        <p>${price} </p>`
+    }
+
+    if(productImage === null) {
+        console.error("Element with id: productImage not found")
+    } else {
+        let currClass = productImage.classList[1]
+        productImage.classList.replace(currClass, model.cssClass)
+    }
     
-    let currClass = productImage.classList[1]
-    productImage.classList.replace(currClass, model.cssClass)
+    if(productFrames === null) {
+        console.error("Element with class: product-image_frame not found")
+    } else {
+        let currFramesClass = productFrames.classList[1]
+        if(currFramesClass === null) {
+            console.error("No class found")
+        } else {
+            productFrames.classList.replace(currFramesClass, frame.cssClass)
+        }
+    }
     
-    let currFramesClass = productFrames.classList[1]
-    productFrames.classList.replace(currFramesClass, frame.cssClass)
+    if(productLenses === null) {
+        console.error("Element with class: product-image_lenses not found")
+    } else { 
+        let currLensesClass = productLenses.classList[1]
+        if(currLensesClass === undefined) {
+            console.error("No class found")
+        } else {
+            productLenses.classList.replace(currLensesClass, lenses.cssClass)
+        }
+        
+    }
     
-    let currLensesClass = productLenses.classList[1]
-    productLenses.classList.replace(currLensesClass, lenses.cssClass)
+    
+    
     
 }
 
 //Highlight current selection
-function addHighlight(clickedItem) {
+function addHighlight(clickedItem: HTMLElement) {
 
     if (Array.from(clickedItem.classList).includes("product-thumb")) {
         let thumbs = document.getElementsByClassName("product-thumb")
@@ -86,9 +114,12 @@ function addHighlight(clickedItem) {
             thumb.classList.remove("selected")
         }
     } else if (Array.from(clickedItem.classList).includes("product-color-swatch")) {
-        let swatches = clickedItem.closest("ul").querySelectorAll("button")
-        for(let swatch of swatches){
-            swatch.classList.remove("selected")
+        let swatches = clickedItem.closest("ul")?.querySelectorAll("button")
+        
+        if(swatches) {
+            for (let swatch of swatches) {
+                swatch.classList.remove("selected")
+            }
         }
     }
     clickedItem.classList.add("selected") 
@@ -96,7 +127,7 @@ function addHighlight(clickedItem) {
 
 
 document.body.addEventListener("click", function(event) {
-    let clickedItem = event.target
+    let clickedItem: HTMLElement | null = event.target as HTMLElement
     let {model, lenses, frame} = sunglassesNew
     console.log(sunglassesNew)
     //if sunglassesNew defined take variable from updates 
@@ -106,7 +137,9 @@ document.body.addEventListener("click", function(event) {
     }
     
     // update model
-    if (Array.from(clickedItem.classList).includes("product-thumb")) {
+    if(clickedItem === null) {
+
+    } else if (Array.from(clickedItem.classList).includes("product-thumb")) {
 
         let currName = clickedItem.dataset.name
 
@@ -142,12 +175,14 @@ document.body.addEventListener("click", function(event) {
     }
     
     // update colors for frames / lenses
-    if (Array.from(clickedItem.classList).includes("product-color-swatch")) {
+    if(clickedItem === null) {
+
+    } else if (Array.from(clickedItem.classList).includes("product-color-swatch")) {
         let currColor = clickedItem.dataset.color
         
         // check nearest parent div
             //lenses
-        if (clickedItem.closest("div").classList[0] === "product-lenses") {
+        if (clickedItem.closest("div")?.classList[0] === "product-lenses") {
             let colorOptions = sunglassesOptions.lenses.filter((item) => item.color === currColor)[0]
             
             let color = colorOptions.color
@@ -158,7 +193,7 @@ document.body.addEventListener("click", function(event) {
                 model: {
                     name: model.name,
                     price: model.price,
-                    thumbImg: model.price,
+                    thumbImg: model.thumbImg,
                     cssClass: model.cssClass,
                 },
                 lenses: {
